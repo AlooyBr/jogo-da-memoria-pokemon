@@ -1,53 +1,84 @@
-* {
+:root {
+  --radius: 12px;
+  --shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  --bg-gradient: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  --panel-bg: rgba(255, 255, 255, 0.08);
+  --panel-shadow: 0 0 20px rgba(0, 0, 0, 0.27);
+  --primary: #00acc1;
+  --primary-hover: #008b9e;
+  --text: #fff;
+  --transition: 0.3s ease;
+  --card-min-width: 120px;
+  --card-aspect: 3 / 4;
+  --highlight: #ffd700;
+  --error: #ff5252;
+  --warning: #ffeb3b;
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-  color: #fff;
+  margin: 0;
+  padding: 2rem;
   min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
+  justify-content: center; /* centraliza verticalmente */
+  gap: 1rem;
 }
 
 h1 {
-  margin-bottom: 1.5rem;
-  font-size: 2.2rem;
+  margin-bottom: 0;
+  font-size: clamp(1.8rem, 2.2vw, 2.6rem);
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 }
 
 .score-panel {
   background-color: rgba(255, 255, 255, 0.1);
   padding: 1rem 2rem;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  box-shadow: 0 0 10px #00000066;
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+  box-shadow: var(--panel-shadow);
   text-align: center;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .score-panel p {
-  margin: 0.4rem 0;
-  font-size: 1.1rem;
+  margin: 0;
+  font-size: 1rem;
 }
 
 .game-board {
   display: grid;
-  grid-template-columns: repeat(6, 120px);
-  grid-gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(var(--card-min-width), 1fr));
+  gap: 20px;
   justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 840px;
+  align-self: center;
 }
 
 .card {
-  width: 120px;
-  height: 160px;
+  width: 100%;
+  max-width: 160px;
+  aspect-ratio: var(--card-aspect);
   perspective: 1000px;
   cursor: pointer;
   position: relative;
+  outline: none;
 }
 
 .card-inner {
@@ -56,6 +87,8 @@ h1 {
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.6s ease;
+  will-change: transform;
+  border-radius: var(--radius);
 }
 
 .card.flipped .card-inner {
@@ -65,17 +98,16 @@ h1 {
 .card-front,
 .card-back {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
+  inset: 0;
+  border-radius: var(--radius);
   backface-visibility: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2.2rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  border: 2px solid #ffffff33;
-  transition: background-color 0.3s;
+  box-shadow: var(--shadow);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: background-color var(--transition);
 }
 
 .card-front {
@@ -85,7 +117,7 @@ h1 {
 }
 
 .card-back {
-  background-color: #ffffff;
+  background-color: #fff;
   transform: rotateY(180deg);
 }
 
@@ -98,30 +130,37 @@ h1 {
 .card.invisible {
   visibility: hidden;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-/* TELA FINAL */
+/* Mensagem final */
 .end-message {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 400px;
   width: 100%;
-  animation: fadeIn 0.8s ease;
+  height: 400px;
+  animation: fadeIn 0.8s ease both;
 }
 
 .message-box {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--panel-bg);
   padding: 2rem 3rem;
   border-radius: 16px;
   text-align: center;
-  box-shadow: 0 0 20px #00000044;
-  max-width: 300px;
+  box-shadow: var(--panel-shadow);
+  max-width: 340px;
+  position: relative;
+  overflow: hidden;
+  animation: bounceIn 1s ease both;
+  transform-origin: center;
 }
 
 .message-box h2 {
   font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
+  animation: shine 1.5s ease-in-out infinite alternate;
 }
 
 .message-box p {
@@ -129,34 +168,39 @@ h1 {
   margin: 0.4rem 0;
 }
 
-.message-box button {
+.btn {
+  display: inline-block;
   margin-top: 1rem;
   padding: 0.7rem 1.2rem;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
-  background-color: #00acc1;
-  color: white;
+  background-color: var(--primary);
+  color: #fff;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color var(--transition);
+  animation: pulse 2s infinite;
 }
 
-.message-box button:hover {
-  background-color: #008b9e;
+.btn:hover,
+.btn:focus-visible {
+  background-color: var(--primary-hover);
+  outline: 2px solid #fff5;
 }
 
 .message-box.win h2 {
-  color: #00e676;
+  color: var(--highlight);
 }
 
 .message-box.lose h2 {
-  color: #ff5252;
+  color: var(--error);
 }
 
 .message-box.draw h2 {
-  color: #ffeb3b;
+  color: var(--warning);
 }
 
+/* Animações */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -165,5 +209,67 @@ h1 {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shine {
+  0% {
+    text-shadow: 0 0 10px #fff5, 0 0 20px #fffb, 0 0 30px #fff8;
+  }
+  100% {
+    text-shadow: 0 0 3px #fff2, 0 0 8px #fff4, 0 0 15px #fff2;
+  }
+}
+
+/* Redução de animação para quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Responsividade */
+@media (max-width: 700px) {
+  .game-board {
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  }
+
+  .card {
+    max-width: 90px;
+  }
+
+  .message-box {
+    padding: 1.5rem 2rem;
   }
 }
